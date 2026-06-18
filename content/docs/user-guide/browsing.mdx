@@ -1,0 +1,87 @@
+---
+title: Browsing Products
+description: How to use the Home Screen, search bar, and category filters to find baby products.
+---
+
+# Browsing Products 
+
+The **Home Screen** is the heart of BabyShopHub. It provides a clean, scrollable product grid with powerful search and filtering tools to help you find exactly what your baby needs.
+
+---
+
+## The Home Screen Layout
+
+When you open the app, the Home Screen shows:
+
+- **Top Bar** — App title, shopping cart icon (with item count badge), and notification bell
+- **Search Bar** — Full-text search across product names and descriptions
+- **Category Filter Row** — Horizontal scrollable category tabs
+- **Featured Banner** — Promotional hero section
+- **Product Grid** — All matching products displayed as cards
+
+---
+
+## Searching for Products
+
+Tap the **search bar** at the top of the Home Screen and type any keyword. BabyShopHub searches across both the **product name** and **description** in real time as you type — no need to press enter.
+
+**Examples:**
+- Type `onesie` → shows all clothing with "onesie" in the name
+- Type `organic` → shows organic food and bath products
+- Type `soft` → shows items described with "soft"
+
+The search is **case-insensitive** and updates instantly.
+
+---
+
+## Filtering by Category
+
+Below the search bar is a row of **category filter chips**. Tap any to filter the grid:
+
+| Category | Products |
+|---|---|
+| **All** | All products (default) |
+| **Clothing** | Baby onesies, bodysuits, sleepwear |
+| **Diapers** | Disposable diapers in various sizes |
+| **Baby Food** | Organic purees and snacks |
+| **Toys** | Wooden, sensory, and educational toys |
+| **Bath** | Shampoos, soaps, bath accessories |
+
+You can combine search + category filter simultaneously. For example, searching `organic` while in the `Baby Food` category narrows results perfectly.
+
+---
+
+## Product Cards
+
+Each product card shows:
+
+- **Product image** (loaded from Cloudinary or Unsplash CDN)
+- **Product name**
+- **Category badge**
+- **Star rating** with review count
+- **Price**
+- **Stock indicator** — shows "Low Stock" (≤5 units) or "Out of Stock" (0 units) in red/amber
+- **Wishlist heart icon** — tap to save/unsave
+- **"Add to Cart" button** — disabled if out of stock
+
+---
+
+## Stock Indicators
+
+| Status | Display |
+|---|---|
+| In stock (>5) | Just the price, green add button |
+| Low stock (1–5) | Amber "Low Stock" warning badge |
+| Out of stock (0) | Red "Out of Stock" badge, add button disabled |
+
+---
+
+## Navigating to a Product
+
+Tap anywhere on a product card (except the wishlist or cart button) to open the full **[Product Details Screen](/docs/user-guide/product-details)**.
+
+---
+
+## Refreshing the Catalog
+
+Product data is loaded from Firestore when the app starts. To refresh manually, pull down on the product grid (pull-to-refresh gesture) or relaunch the app.

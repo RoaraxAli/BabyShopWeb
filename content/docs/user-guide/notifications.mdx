@@ -1,0 +1,91 @@
+---
+title: Notifications
+description: Understanding in-app notifications — order updates, wishlist alerts, and how to manage them.
+---
+
+# Notifications 
+
+BabyShopHub's **Notification Center** keeps you informed about important events on your account — from order status changes to wishlist restocks.
+
+---
+
+## Opening Notifications
+
+Tap the **bell icon** in the top-right of the Home Screen. A badge number shows how many unread notifications you have.
+
+---
+
+## Types of Notifications
+
+| Type | Trigger | Example |
+|---|---|---|
+| **Order Update** | Admin changes your order status | "Your order #ABC123 has been Shipped!" |
+| **Support Reply** | Admin sends you a support message | "We've responded to your inquiry." |
+| **Wishlist Alert** | Wishlisted item comes back in stock | "Wooden Stacking Toy is back in stock!" |
+| **System** | General account events | "Welcome to BabyShopHub!" |
+
+---
+
+## Notification Cards
+
+Each notification card shows:
+
+- **Title** — Brief headline
+- **Body** — Full notification message
+- **Timestamp** — When the notification was created
+- **Type badge** — Order / Support / System
+- **Read indicator** — Unread notifications are highlighted
+
+---
+
+## Marking as Read
+
+Tap any notification card to mark it as **read**. The notification remains in your list but is no longer highlighted as unread.
+
+The bell badge count decreases by 1 for each notification you read.
+
+---
+
+## Notification Storage
+
+Notifications are stored in Firestore under:
+```
+users/{userId}/notifications/{notificationId}
+```
+
+Each document:
+```json
+{
+  "id": "notif_abc123",
+  "title": "Order Shipped!",
+  "body": "Your order #XYZ has been shipped and is on its way.",
+  "type": "order",
+  "read": false,
+  "createdAt": "2026-05-24T10:30:00Z"
+}
+```
+
+Notifications are fetched sorted by `createdAt` descending (newest first).
+
+---
+
+## Admin-Sent Notifications
+
+Administrators can send custom in-app notifications to any user directly from the **Admin Panel**. This is used for:
+
+- Order status updates
+- Support responses
+- Promotional announcements
+- Stock alerts (supplementing email alerts)
+
+---
+
+## Clearing Notifications
+
+Currently, there is no bulk "clear all" button. Each notification remains in your list until you mark it read. Future versions will support deletion.
+
+---
+
+<Callout type="info">
+BabyShopHub does not currently support push notifications (Firebase Cloud Messaging). Notifications are in-app only and visible when you open the notification center.
+</Callout>

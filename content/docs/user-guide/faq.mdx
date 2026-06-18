@@ -1,0 +1,110 @@
+---
+title: Frequently Asked Questions
+description: Answers to the most common questions from BabyShopHub parents and shoppers.
+---
+
+# Frequently Asked Questions 
+
+---
+
+## Account & Login
+
+### How do I create an account?
+Go to the Welcome Screen and tap "Create Account". Enter your name, email, and password — a 5-digit OTP will be sent to your email. Enter the code to verify your email and complete registration. See [Registration](/docs/user-guide/registration) for the full guide.
+
+### I forgot my password. What do I do?
+On the Login Screen, tap "Forgot Password?". Enter your email address and we'll send you a 5-digit OTP. Enter the code, then set a new password.
+
+### Can I sign in with Google?
+Yes! Tap "Continue with Google" on the Login Screen. Your Google profile photo, name, and email are used automatically. See [Login](/docs/user-guide/login).
+
+### My login OTP email never arrived. What should I do?
+1. Check your spam/junk folder
+2. Make sure you entered the correct email
+3. During development, the OTP is also printed in the Flutter debug console
+4. Wait up to 2 minutes — SMTP delivery can occasionally be delayed
+
+---
+
+## Shopping & Products
+
+### How do I search for a product?
+Type in the search bar at the top of the Home Screen. The results update in real time as you type, matching against product names and descriptions.
+
+### Can I filter by category?
+Yes — tap any category chip in the horizontal filter row below the search bar. Categories are: All, Clothing, Diapers, Baby Food, Toys, Bath.
+
+### Why can't I add an item to my cart?
+The item is likely out of stock. The "Add to Cart" button is disabled when stock = 0. You can wishlist the item and receive an automatic email when it's back in stock.
+
+### What is "Low Stock"?
+When a product has 5 or fewer units remaining, a "Low Stock" warning appears. Order soon before it sells out!
+
+---
+
+## Cart & Promo Codes
+
+### Are my cart items saved between sessions?
+No — the cart is stored in memory only and is cleared when you close the app. Save items to your Wishlist to remember them across sessions.
+
+### What promo codes are available?
+| Code | Discount |
+|---|---|
+| `FIRSTBABY` | 15% off |
+| `BABYSAVE10` | $10 off (min. $30 order) |
+| `NEWPARENT` | 20% off |
+
+### My promo code says it's invalid. Why?
+Check that you typed the code correctly (codes are case-insensitive). For `BABYSAVE10`, ensure your subtotal is $30.00 or more.
+
+---
+
+## Orders & Delivery
+
+### How long does delivery take?
+Standard delivery takes 2–3 business days after your order is Shipped.
+
+### How do I track my order?
+Go to Profile → My Orders → tap any order to open the Order Tracking Screen with a full status timeline.
+
+### Can I cancel my order?
+Contact support within 30 minutes of placing the order. After that, the order may already be in processing.
+
+### I didn't receive a confirmation email. What happened?
+Check your spam folder. Confirmation emails are dispatched immediately after checkout. If the SMTP relay server is offline (development mode), emails may not be sent — check the debug console.
+
+---
+
+## Wishlist & Alerts
+
+### How does the "back in stock" alert work?
+When you wishlist an out-of-stock product, your email is registered for an alert. The moment an admin updates the stock from 0 to any positive number, you'll automatically receive an email.
+
+### Can I remove an item from the Wishlist?
+Yes — tap the heart icon again on the product card or on the Wishlist Screen. This removes the item and cancels any pending stock alerts for that product.
+
+---
+
+## Security
+
+### What is 2FA / TOTP?
+Two-Factor Authentication adds a second verification step to your login — a 6-digit code from an authenticator app (like Google Authenticator). Even if someone has your password, they can't log in without your phone.
+
+### I lost access to my authenticator app. How do I log in?
+Contact BabyShopHub support immediately. Account recovery without TOTP access requires manual admin verification.
+
+### Why did I receive a "Login Notification" email I didn't initiate?
+Someone may have accessed your account. Change your password immediately from the Login Screen's "Forgot Password" flow, then enable 2FA for added protection.
+
+---
+
+## App & Technical
+
+### Which platforms does BabyShopHub run on?
+BabyShopHub is a Flutter app that runs on **Android**, **iOS**, and **Web**.
+
+### Is my data private?
+Your personal data (name, email, addresses, orders) is stored in Google Firebase (Firestore) with strict security rules — only you can read and write your own data.
+
+### How do I contact support?
+From the Profile Screen, tap "Contact Support" to open the AI Assistant or send a message to our team.

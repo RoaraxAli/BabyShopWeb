@@ -1,0 +1,98 @@
+---
+title: Your Profile
+description: Manage your display name, avatar, profile photo, and account settings.
+---
+
+# Your Profile 
+
+The **Profile Screen** is your personal account hub. From here you can update your name, change your avatar or photo, manage addresses, view orders, and configure account security.
+
+---
+
+## Opening Your Profile
+
+Tap the **Profile** icon in the bottom navigation bar, or tap your avatar in the top bar of the Home Screen.
+
+---
+
+## What's on the Profile Screen
+
+| Section | Actions |
+|---|---|
+| **Profile Header** | Shows your avatar/photo, display name, email, and role badge |
+| **Edit Display Name** | Change the name shown throughout the app |
+| **Avatar Selection** | Choose from 6 preset illustrated avatars |
+| **Profile Photo** | Upload a custom photo from your device |
+| **My Orders** | Navigate to Order History |
+| **Saved Addresses** | Manage delivery addresses |
+| **Notifications** | Open notification center |
+| **Security Settings** | Configure 2FA / TOTP |
+| **Contact Support** | Open AI chat or send support request |
+| **Appearance** | Toggle light/dark mode and color themes |
+| **Sign Out** | Log out of your account |
+
+---
+
+## Changing Your Display Name
+
+1. On the Profile Screen, tap the **edit (pencil) icon** next to your name, or tap **"Edit Profile"**
+2. Enter your new display name in the text field
+3. Tap **"Save"**
+
+Your name is updated immediately in Firestore and synced across the app.
+
+---
+
+## Choosing an Avatar
+
+BabyShopHub provides **6 preset avatars** to represent your account if you haven't uploaded a custom photo:
+
+| Index | Avatar Name |
+|---|---|
+| 0 | Newborn |
+| 1 | Baby Panda |
+| 2 | Teddy Bear |
+| 3 | Baby Unicorn |
+| 4 | Tiger Cub |
+| 5 | Baby Owl |
+
+Tap the avatar selection area to open the avatar picker. Tap your chosen avatar and tap **"Select"**.
+
+---
+
+## Uploading a Profile Photo
+
+To use a custom photo instead of an avatar:
+
+1. Tap your current avatar/photo on the Profile Screen
+2. Tap **"Upload Photo"** or the camera icon
+3. Choose **"Camera"** or **"Photo Library"**
+4. Select or take your photo
+5. The photo is uploaded to **Cloudinary** and the resulting URL is saved to your Firestore profile
+
+Your custom photo takes priority over the avatar selection. To revert to an avatar, go to Avatar Selection and pick one.
+
+<Callout type="info">
+Profile photos are hosted on Cloudinary and served via a fast CDN. Image uploads require a valid Cloudinary cloud name and upload preset to be configured in the app (set by the admin via Admin Panel settings).
+</Callout>
+
+---
+
+## Appearance Settings
+
+From the Profile Screen, tap **"Appearance"** to:
+
+- Toggle **Light / Dark mode**
+- Choose a **color theme preset** (e.g. Pink, Mint, Lavender, Ocean)
+- Enter a **custom hex color** for a fully personalized theme
+
+Theme preferences are persisted in `SharedPreferences` and applied automatically on the next app start.
+
+---
+
+## Signing Out
+
+Tap **"Sign Out"** at the bottom of the Profile Screen. This:
+1. Clears your session from `SharedPreferences`
+2. Signs you out of Firebase Auth
+3. Returns you to the Welcome Screen

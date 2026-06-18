@@ -1,0 +1,92 @@
+---
+title: Developer Guide Overview
+description: Architecture overview, tech stack, and navigation for BabyShopHub developers and contributors.
+---
+
+# Developer Guide ️
+
+This guide is for developers building, maintaining, and extending BabyShopHub. It covers every layer of the system — from the Flutter client architecture to Firebase configuration, Firestore schemas, service deep-dives, the email relay server, and deployment.
+
+---
+
+## Architecture at a Glance
+
+BabyShopHub follows a **serverless, provider-driven architecture**:
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  Flutter Client                      │
+│  ┌──────────┐  ┌──────────────┐  ┌───────────────┐  │
+│  │ Screens  │  │  Providers   │  │    Services   │  │
+│  │ (UI/UX)  │◄─┤ AuthProvider │  │ CloudinaryService│
+│  │          │  │ ShopProvider │  │ GroqService   │  │
+│  │          │  │ThemeProvider │  └───────────────┘  │
+│  └──────────┘  └──────┬───────┘                     │
+└─────────────────────── │ ──────────────────────────┘
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+   Firebase Auth   Cloud Firestore   Groq API
+   (Authentication) (Database)      (LLM Chat)
+                                          
+          ┌─────────────────────────┐
+          │  Node.js SMTP Relay     │
+          │  (server/index.js)      │
+          │  Nodemailer + Zoho SMTP │
+          └─────────────────────────┘
+```
+
+---
+
+## Quick Navigation
+
+| Topic | Description |
+|---|---|
+| [Local Setup](/docs/developer-guide/setup) | Install dependencies, configure Firebase, run locally |
+| [Project Structure](/docs/developer-guide/project-structure) | Directory layout and file responsibilities |
+| [Firebase Configuration](/docs/developer-guide/firebase) | Auth, Firestore, firebase_options setup |
+| [Firestore Schema](/docs/developer-guide/firestore-schema) | All collections, fields, and subcollections |
+| [AuthProvider](/docs/developer-guide/auth-provider) | Authentication state management deep-dive |
+| [ShopProvider](/docs/developer-guide/shop-provider) | Cart, wishlist, checkout, stock management |
+| [Data Models](/docs/developer-guide/models) | All Dart model classes with field docs |
+| [Screens](/docs/developer-guide/screens) | Every screen — purpose and key widgets |
+| [Admin Panel](/docs/developer-guide/admin-panel) | Admin-only features and management tools |
+| [Email Relay Server](/docs/developer-guide/email-relay) | Node.js SMTP server setup and endpoints |
+| [Cloudinary](/docs/developer-guide/cloudinary) | Image upload service configuration |
+| [Groq AI](/docs/developer-guide/groq-ai) | AI chat integration, models, fallback |
+| [Theme System](/docs/developer-guide/theme) | ThemeProvider, presets, SharedPreferences |
+| [Security Rules](/docs/developer-guide/security-rules) | Firestore security rules explained |
+| [Deployment](/docs/developer-guide/deployment) | Build and deploy to web, Android, iOS |
+
+---
+
+## Core Dependencies
+
+```yaml
+# pubspec.yaml
+dependencies:
+  flutter:                sdk: flutter
+  firebase_core:          2.32.0
+  firebase_auth:          4.20.0
+  cloud_firestore:        4.17.0
+  provider:               6.1.1
+  shared_preferences:     2.2.2
+  google_fonts:           6.1.0
+  google_sign_in:         ^6.2.1
+  http:                   1.2.1
+  image_picker:           ^1.1.2
+```
+
+---
+
+## State Management Pattern
+
+BabyShopHub uses **Provider** (`ChangeNotifier`) for global state. Three providers are injected at the root `MultiProvider`:
+
+| Provider | Responsibility |
+|---|---|
+| `ThemeProvider` | App theme, dark/light mode, color presets |
+| `AuthProvider` | User authentication, profile, addresses, notifications |
+| `ShopProvider` | Products, cart, wishlist, checkout, promo codes |
+
+All providers extend `ChangeNotifier` and call `notifyListeners()` after any state mutation, which triggers reactive UI rebuilds.

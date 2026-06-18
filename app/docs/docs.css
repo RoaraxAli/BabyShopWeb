@@ -1,0 +1,17 @@
+@tailwind components;
+@tailwind utilities;
+
+/* Scoped resets for fumadocs since we disabled preflight */
+.docs-page button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.docs-page input {
+  background: transparent;
+}
+.docs-page a {
+  text-decoration: inherit;
+  color: inherit;
+}

@@ -469,7 +469,7 @@ export default function ShopPage() {
                     return (
                       <article className="product-premium-card" key={product.id}>
                         <div className="card-image-wrapper">
-                          <img src={product.image} alt={product.name} />
+                          <Image src={product.image} alt={product.name} width={400} height={400} />
                           <button
                             onClick={() => toggleWishlist(product.id)}
                             className={`wishlist-toggle-btn ${isWishlisted ? "active" : ""}`}
@@ -513,7 +513,7 @@ export default function ShopPage() {
                     .map((product) => (
                       <article className="product-premium-card" key={product.id}>
                         <div className="card-image-wrapper">
-                          <img src={product.image} alt={product.name} />
+                          <Image src={product.image} alt={product.name} width={400} height={400} />
                           <button
                             onClick={() => toggleWishlist(product.id)}
                             className="wishlist-toggle-btn active"
@@ -688,7 +688,7 @@ export default function ShopPage() {
                 <div className="cart-items-list">
                   {cart.map((item) => (
                     <div className="cart-item-card" key={item.product.id}>
-                      <img src={item.product.image} alt={item.product.name} />
+                      <Image src={item.product.image} alt={item.product.name} width={80} height={80} />
                       <div className="cart-item-info">
                         <h3>{item.product.name}</h3>
                         <strong className="cart-item-price">{item.product.price}</strong>

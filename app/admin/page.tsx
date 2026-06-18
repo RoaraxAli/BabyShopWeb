@@ -1,6 +1,7 @@
 "use client";
 
 import { Home, LogOut, PackagePlus, ReceiptText, Settings, Shield, UsersRound, Wrench, Plus, Edit2, Trash2, ArrowRight, DollarSign, CheckCircle, Clock } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, query, onSnapshot, addDoc, serverTimestamp } from "firebase/firestore";
@@ -397,7 +398,7 @@ export default function AdminPage() {
                   <tr key={prod.id}>
                     <td>
                       <div className="table-product-cell">
-                        <img src={prod.image} alt="" />
+                        <Image src={prod.image} alt="" width={60} height={60} />
                         <div>
                           <strong>{prod.name}</strong>
                           <span className="desc-short">{prod.description ? prod.description.slice(0, 40) : ""}...</span>
