@@ -137,7 +137,7 @@ export default function HomePage() {
                   <Download size={18} />
                   Get Downloads
                 </a>
-                <a className="button light-rounded" href="/documentation">
+                <a className="button light-rounded" href="/docs/documentation">
                   <BookOpen size={18} />
                   Read Setup Docs
                 </a>

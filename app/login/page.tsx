@@ -33,8 +33,12 @@ export default function LoginPage() {
     try {
       const profile = await login(email.trim(), password);
       await routeByRole(profile);
-    } catch {
-      setError("Incorrect email or password.");
+    } catch (err: any) {
+      if (err.message === "EMAIL_NOT_VERIFIED") {
+        setError("Your email is not verified. Please check your inbox for a verification link.");
+      } else {
+        setError("Incorrect email or password.");
+      }
     } finally {
       setLoading(false);
     }

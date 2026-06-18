@@ -23,7 +23,7 @@ export function Nav() {
           <Download size={16} />
           Downloads
         </Link>
-        <Link href="/documentation">
+        <Link href="/docs/documentation">
           <BookOpen size={16} />
           Docs
         </Link>

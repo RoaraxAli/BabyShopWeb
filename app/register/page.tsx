@@ -23,8 +23,12 @@ export default function RegisterPage() {
     try {
       const profile = await register(name.trim(), email.trim(), password);
       router.push(profile.role === "admin" ? "/admin" : "/shop");
-    } catch {
-      setError("Could not create account. Check the email and password.");
+    } catch (err: any) {
+      if (err.message === "EMAIL_NOT_VERIFIED") {
+        setError("Account created! Please verify your email using the link sent to your inbox before logging in.");
+      } else {
+        setError("Could not create account. Check the email and password.");
+      }
     } finally {
       setLoading(false);
     }

@@ -307,12 +307,7 @@ export default function AdminPage() {
 
       {/* Main Admin Section */}
       <section className="admin-main">
-        {/* Admin Premium Hero Banner */}
-        <div className="admin-hero-banner">
-          <div className="hero-badge"><Shield size={14} /> Admin Workspace</div>
-          <h1>System Control Panel</h1>
-          <p>Manage products, view delivery statistics, configure server values, and reply to client tickets.</p>
-        </div>
+
 
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
@@ -604,7 +599,7 @@ export default function AdminPage() {
             </label>
             <label className="check-row">
               <input type="checkbox" checked={settings.requireEmailVerification} onChange={(e) => setSettings({ ...settings, requireEmailVerification: e.target.checked })} />
-              Require email verification before orders
+              Require email verification on user login
             </label>
             {settingsSavedStatus && <strong className="form-status">{settingsSavedStatus}</strong>}
             <button className="btn-save-settings">Save All Configuration</button>

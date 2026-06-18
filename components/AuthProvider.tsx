@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  sendEmailVerification,
 } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -31,6 +32,16 @@ type AuthContextValue = {
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+async function checkEmailVerification(firebaseUser: User) {
+  const settingsSnap = await getDoc(doc(db, "admin_settings", "store"));
+  const requireVerification = settingsSnap.exists() ? settingsSnap.data().requireEmailVerification : false;
+  if (requireVerification && !firebaseUser.emailVerified) {
+    await sendEmailVerification(firebaseUser);
+    await signOut(auth);
+    throw new Error("EMAIL_NOT_VERIFIED");
+  }
+}
 
 async function loadProfile(user: User): Promise<WebUser> {
   const ref = doc(db, "users", user.uid);
@@ -78,7 +89,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        setUser(await loadProfile(firebaseUser));
+        // Only allow loaded user state if verified when configuration requires it
+        const settingsSnap = await getDoc(doc(db, "admin_settings", "store"));
+        const requireVerification = settingsSnap.exists() ? settingsSnap.data().requireEmailVerification : false;
+        if (requireVerification && !firebaseUser.emailVerified) {
+          setUser(null);
+        } else {
+          setUser(await loadProfile(firebaseUser));
+        }
+      } catch {
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -91,6 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       async login(email, password) {
         const credential = await signInWithEmailAndPassword(auth, email, password);
+        await checkEmailVerification(credential.user);
         const profile = await loadProfile(credential.user);
         setUser(profile);
         return profile;
@@ -108,6 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role,
           createdAt: serverTimestamp(),
         });
+        await checkEmailVerification(credential.user);
         const profile = await loadProfile(credential.user);
         setUser(profile);
         return profile;
@@ -115,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async googleLogin() {
         const provider = new GoogleAuthProvider();
         const credential = await signInWithPopup(auth, provider);
+        await checkEmailVerification(credential.user);
         const profile = await loadProfile(credential.user);
         setUser(profile);
         return profile;
