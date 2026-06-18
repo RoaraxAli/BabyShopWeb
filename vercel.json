@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/docs",
+      "destination": "https://docs.babyshop.theali.app",
+      "permanent": true
+    },
+    {
+      "source": "/documentation",
+      "destination": "https://docs.babyshop.theali.app",
+      "permanent": true
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "https://docs.babyshop.theali.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/documentation/:path*",
+      "destination": "https://docs.babyshop.theali.app/:path*",
+      "permanent": true
+    }
+  ]
+}

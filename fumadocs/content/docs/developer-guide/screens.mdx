@@ -1,0 +1,54 @@
+---
+title: UI & Screens
+description: Screen architecture, routing, and key UI components
+---
+
+# Screens & UI Architecture
+
+BabyShopHub utilizes a modular approach for its user interface. All screens are located in the `lib/screens/` directory and use standard Flutter routing.
+
+## Routing
+
+The app uses named routes defined in `main.dart`.
+
+```dart
+MaterialApp(
+  initialRoute: '/',
+  routes: {
+    '/': (context) => const AuthWrapper(),
+    '/home': (context) => const HomeScreen(),
+    '/product': (context) => const ProductDetailsScreen(),
+    '/cart': (context) => const CartScreen(),
+    '/admin': (context) => const AdminDashboardScreen(),
+  },
+)
+```
+
+The `AuthWrapper` determines the initial screen based on `AuthProvider.isAuthenticated`.
+
+## Key Screens
+
+### `HomeScreen`
+The main landing page. Features a scrolling hero banner, horizontal category lists, and a grid of featured products. Connects to `ShopProvider` to display real-time stock.
+
+### `ProductDetailsScreen`
+Displays an individual product.
+-   Accepts `productId` via route arguments.
+-   Fetches product data and displays an image carousel.
+-   Contains an "Add to Cart" button that interacts with `ShopProvider`.
+
+### `CartScreen` & `CheckoutScreen`
+-   **Cart:** Displays items, quantities, and a total.
+-   **Checkout:** A multi-step form for shipping details, payment selection (Stripe/dummy), and order confirmation.
+
+### `ProfileScreen`
+Allows users to view their details, navigate to their order history, and log out.
+
+## Shared Components
+Located in `lib/widgets/`. These are highly reusable UI elements:
+-   `CustomButton`: The standard app button with loading state support.
+-   `ProductCard`: A grid item used to display a product summary.
+-   `InputField`: Standardized `TextFormField` with predefined styling and validation logic.
+
+## Responsive Design
+BabyShopHub uses `LayoutBuilder` and `MediaQuery` to ensure screens adapt gracefully to both mobile phones and larger tablet displays.

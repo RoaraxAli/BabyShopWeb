@@ -1,0 +1,83 @@
+---
+title: Data Models
+description: Dart model classes, serialization, and structure
+---
+
+# Data Models
+
+BabyShopHub uses strongly-typed Dart model classes to represent Firestore data. All models include `fromJson` (or `fromMap`) and `toJson` methods to facilitate easy parsing.
+
+## Directory Structure
+Models are located in `lib/models/`.
+
+## Key Models
+
+### `UserModel`
+Represents the data stored in `users/{uid}`.
+
+```dart
+class UserModel {
+  final String id;
+  final String email;
+  final String displayName;
+  final String photoUrl;
+  final String role;
+
+  UserModel({required this.id, required this.email, ...});
+
+  factory UserModel.fromMap(Map<String, dynamic> map, String id) {
+    return UserModel(
+      id: id,
+      email: map['email'] ?? '',
+      displayName: map['displayName'] ?? '',
+      // ...
+    );
+  }
+}
+```
+
+### `ProductModel`
+Represents an item in the `products` collection. Uses `cloud_firestore` `Timestamp` for dates.
+
+```dart
+class ProductModel {
+  final String id;
+  final String name;
+  final double price;
+  final int stock;
+  final List<String> images;
+  
+  // Factory and toJson methods included...
+}
+```
+
+### `CartItemModel`
+A local model combining a `ProductModel` snapshot and a quantity.
+
+```dart
+class CartItemModel {
+  final ProductModel product;
+  int quantity;
+  
+  double get totalPrice => product.price * quantity;
+}
+```
+
+### `OrderModel`
+Represents a finalized transaction.
+
+```dart
+class OrderModel {
+  final String id;
+  final String userId;
+  final List<CartItemModel> items;
+  final double totalAmount;
+  final String status;
+  final DateTime createdAt;
+}
+```
+
+## Best Practices
+-   **Immutability:** Most model fields should be `final`. Create a `copyWith` method if mutation is necessary.
+-   **Null Safety:** Always provide fallback values (e.g., `map['name'] ?? 'Unknown'`) in `fromMap` factories to prevent crashes when Firestore documents have missing fields.
+-   **Date Parsing:** Firestore returns `Timestamp` objects. Convert them to Dart `DateTime` in the `fromMap` factory: `(map['createdAt'] as Timestamp).toDate()`.

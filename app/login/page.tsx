@@ -2,19 +2,25 @@
 
 import { Baby, Eye, EyeOff, Mail, LockKeyhole } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, googleLogin } = useAuth();
+  const { login, googleLogin, user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push(user.role === "admin" ? "/admin" : "/shop");
+    }
+  }, [user, authLoading, router]);
 
   async function routeByRole(profile: { role: string }) {
     router.push(profile.role === "admin" ? "/admin" : "/shop");

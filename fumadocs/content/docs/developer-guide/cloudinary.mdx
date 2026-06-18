@@ -1,0 +1,53 @@
+---
+title: Cloudinary Integration
+description: Image upload service configuration for product management
+---
+
+# Cloudinary Integration
+
+BabyShopHub uses Cloudinary to host product images. This offloads storage costs from Firebase and provides automatic image optimization.
+
+## How It Works
+
+When an Admin creates or edits a product, they select images from their device using the `image_picker` package. Instead of uploading these to Firebase Storage, they are uploaded directly to Cloudinary.
+
+## Setup
+
+1.  Create a Cloudinary account.
+2.  Obtain your Cloud Name, API Key, and Upload Preset.
+3.  Ensure the Upload Preset is set to "Unsigned" to allow uploads directly from the mobile client.
+
+## Client-Side Implementation
+
+The `CloudinaryService` handles the HTTP POST request to the Cloudinary REST API.
+
+```dart
+class CloudinaryService {
+  static const String cloudName = 'your_cloud_name';
+  static const String uploadPreset = 'your_unsigned_preset';
+
+  Future<String?> uploadImage(File imageFile) async {
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+    
+    final request = http.MultipartRequest('POST', url)
+      ..fields['upload_preset'] = uploadPreset
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    final response = await request.send();
+    
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final jsonMap = jsonDecode(responseData);
+      return jsonMap['secure_url']; // The hosted image URL
+    }
+    return null;
+  }
+}
+```
+
+## Security Considerations
+
+Because we use "Unsigned" uploads from the client, anyone with the upload preset name could technically upload files to your Cloudinary account. To mitigate this:
+1.  Cloudinary allows strict restrictions on allowed file types (e.g., only images).
+2.  Apply transformation limits so massive files are resized immediately.
+3.  Only admins in the app have UI access to trigger this code.

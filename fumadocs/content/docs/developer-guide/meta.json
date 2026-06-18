@@ -1,0 +1,21 @@
+{
+  "title": "Developer Guide",
+  "pages": [
+    "index",
+    "setup",
+    "project-structure",
+    "firebase",
+    "firestore-schema",
+    "auth-provider",
+    "shop-provider",
+    "models",
+    "screens",
+    "admin-panel",
+    "email-relay",
+    "cloudinary",
+    "groq-ai",
+    "theme",
+    "security-rules",
+    "deployment"
+  ]
+}

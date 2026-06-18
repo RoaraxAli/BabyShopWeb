@@ -1,0 +1,52 @@
+---
+title: Shop Provider
+description: Product, Cart, Wishlist, and Checkout state management
+---
+
+# ShopProvider
+
+The `ShopProvider` acts as the central hub for the e-commerce logic. It handles the local cart state, syncs with Firestore, and coordinates the checkout flow.
+
+## Architecture
+
+Because the `ShopProvider` requires knowledge of the currently logged-in user (to sync cart and wishlist to Firestore), it should be provided using a `ChangeNotifierProxyProvider` if dependent on `AuthProvider`, or handle UID injection directly.
+
+## Core State
+
+-   `List<ProductModel> _products`: Global list of fetched products.
+-   `List<CartItemModel> _cart`: Items currently in the cart.
+-   `List<String> _wishlist`: Product IDs the user has liked.
+-   `double _cartTotal`: Computed value of the cart.
+
+## Cart Management
+
+The cart is maintained locally for immediate UI updates, and asynchronously synced to the user's Firestore subcollection to persist across devices.
+
+### Methods
+
+-   `addToCart(ProductModel product, int quantity)`
+-   `removeFromCart(String productId)`
+-   `updateQuantity(String productId, int newQuantity)`
+-   `clearCart()`
+
+When an item is added:
+1.  Check if it exists in `_cart`. If so, increment quantity.
+2.  If not, add as a new `CartItemModel`.
+3.  Calculate the new total.
+4.  Call `notifyListeners()`.
+5.  Launch an async background task to update `users/{uid}/cart` in Firestore.
+
+## Checkout Flow
+
+The `processCheckout()` method is complex and involves multiple steps:
+
+1.  **Validation:** Check stock levels for all items in `_cart`.
+2.  **Order Creation:** Generate an `OrderModel`.
+3.  **Database Transaction:** 
+    - Deduct stock from the `products` collection.
+    - Write the order to the `orders` collection.
+    - Clear the user's cart in Firestore.
+4.  **Local State Clear:** Call `clearCart()`.
+5.  **Notification:** Trigger the `Email Relay` to send a confirmation email.
+
+If any step fails, the transaction is rolled back, and the UI receives an error.

@@ -1,0 +1,90 @@
+---
+title: Checkout
+description: How to place an order — selecting your address, reviewing your order, and completing payment.
+---
+
+# Checkout 💳
+
+The **Checkout Screen** is where you finalize your order. You'll select a delivery address, review your items and total, and confirm your purchase.
+
+---
+
+## Opening Checkout
+
+From the [Cart Screen](/docs/user-guide/cart), tap **"Proceed to Checkout"**.
+
+---
+
+## Step 1 — Select a Delivery Address
+
+The checkout screen shows a list of your **saved addresses**. Tap one to select it as the delivery destination.
+
+- If you haven't saved any addresses yet, tap **"Add New Address"** to create one inline.
+- Your **default address** is pre-selected automatically.
+
+See [Saved Addresses](/docs/user-guide/addresses) for how to add and manage addresses.
+
+---
+
+## Step 2 — Review Your Order
+
+A full order summary is shown:
+
+- Each item with name, quantity, and line total
+- Subtotal
+- Promo discount (if applied)
+- **Grand Total**
+
+Review everything carefully. You can go back to the cart to make changes.
+
+---
+
+## Step 3 — Confirm & Place Order
+
+Tap **"Place Order"** (or "Authorize Payment") to submit your order.
+
+What happens next:
+
+1. Your order is written to Firestore (`orders` collection) with status **"Pending"**
+2. Stock levels for each purchased item are decremented in both Firestore and local state
+3. Your cart is automatically cleared
+4. A **confirmation email** is sent to your registered address (from our SMTP relay)
+5. A success dialog is shown — tap "View Order" to go to your Order History
+
+---
+
+## Order Confirmation Email
+
+After a successful checkout, you receive an email:
+
+> **Subject:** Order Confirmed - BabyShopHub
+
+The email includes:
+- Itemized product list with quantities and prices
+- Promo discount (if applied)
+- Grand total
+- Your delivery address
+
+---
+
+## Payment Processing
+
+<Callout type="info">
+BabyShopHub's current version uses a **simulated payment flow** — no real card processing occurs. The checkout intentionally succeeds for all orders. Real payment gateway integration (Stripe/PayPal) is planned for a future release.
+</Callout>
+
+---
+
+## After Checkout
+
+Your order immediately appears in [Order History](/docs/user-guide/orders) with the initial status **"Pending"**. The admin panel is used to advance order statuses as fulfillment progresses.
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|---|---|
+| No addresses available | Add an address in [Profile → Addresses](/docs/user-guide/addresses) |
+| Order failed to submit | Check your internet connection and try again |
+| Didn't receive confirmation email | Check spam folder; email delivery may take up to 2 minutes |

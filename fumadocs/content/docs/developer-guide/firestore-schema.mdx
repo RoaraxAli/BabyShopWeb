@@ -1,0 +1,65 @@
+---
+title: Firestore Schema
+description: Database schema, collections, and subcollections mapping
+---
+
+# Firestore Schema
+
+BabyShopHub utilizes Cloud Firestore for all structured data storage. This document outlines the schema, including collections, documents, and subcollections.
+
+## Root Collections
+
+### `users`
+Stores user profile information. Document ID matches the `uid` from Firebase Auth.
+-   `email` (String)
+-   `displayName` (String)
+-   `photoURL` (String)
+-   `createdAt` (Timestamp)
+-   `role` (String) - Defines permissions (e.g., `"admin"`, `"user"`)
+
+**Subcollections under `users/{uid}`:**
+-   `addresses`: Shipping and billing addresses.
+-   `orders`: Order history.
+-   `wishlist`: Saved product IDs.
+
+### `products`
+The core catalog of items available in the shop.
+-   `id` (String)
+-   `name` (String)
+-   `description` (String)
+-   `price` (Number)
+-   `stock` (Number)
+-   `category` (String)
+-   `images` (Array of Strings) - Cloudinary URLs
+-   `createdAt` (Timestamp)
+-   `updatedAt` (Timestamp)
+
+### `categories`
+Used to render the dynamic category navigation in the app.
+-   `id` (String)
+-   `name` (String)
+-   `iconUrl` (String)
+-   `isActive` (Boolean)
+
+### `orders`
+A global collection for order fulfillment and tracking. User-specific views query this collection using `where('userId', isEqualTo: uid)`.
+-   `id` (String)
+-   `userId` (String)
+-   `items` (Array of Map) - Snapshot of products at the time of purchase.
+-   `totalAmount` (Number)
+-   `status` (String) - e.g., `"pending"`, `"processing"`, `"shipped"`, `"delivered"`
+-   `shippingAddress` (Map)
+-   `createdAt` (Timestamp)
+
+### `promo_codes`
+Discount codes available for checkout.
+-   `code` (String)
+-   `discountType` (String) - `"percentage"` or `"fixed"`
+-   `value` (Number)
+-   `expiresAt` (Timestamp)
+-   `isActive` (Boolean)
+
+## Design Patterns
+
+-   **Data Duplication (Denormalization):** We duplicate product snapshots inside the `orders` collection. If a product price changes later, the historical order retains the exact price the user paid.
+-   **Security:** Ensure you read the [Security Rules](/docs/developer-guide/security-rules) to understand who can read/write to these paths.

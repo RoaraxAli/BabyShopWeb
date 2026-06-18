@@ -1,0 +1,82 @@
+---
+title: Auth Provider
+description: User authentication and profile state management
+---
+
+# AuthProvider
+
+The `AuthProvider` is a core `ChangeNotifier` responsible for managing the user's authentication lifecycle and synchronizing profile data with Firestore.
+
+## Core Responsibilities
+
+1.  **Authentication State:** Listening to Firebase Auth streams.
+2.  **User Data Sync:** Fetching the `users/{uid}` document.
+3.  **Authentication Methods:** Handling Login, Registration, Google Sign-In, and Logout.
+4.  **Error Handling:** Catching Auth exceptions and providing readable errors to the UI.
+
+## Implementation Details
+
+```dart
+class AuthProvider extends ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  User? _user;
+  UserModel? _userProfile;
+  bool _isLoading = false;
+
+  // Getters
+  User? get user => _user;
+  UserModel? get userProfile => _userProfile;
+  bool get isLoading => _isLoading;
+  bool get isAuthenticated => _user != null;
+
+  AuthProvider() {
+    _initAuthListener();
+  }
+
+  void _initAuthListener() {
+    _auth.authStateChanges().listen((User? user) async {
+      _user = user;
+      if (user != null) {
+        await _fetchUserProfile(user.uid);
+      } else {
+        _userProfile = null;
+      }
+      notifyListeners();
+    });
+  }
+}
+```
+
+## Key Methods
+
+### `signInWithEmail(String email, String password)`
+Authenticates the user via Firebase. Throws custom exceptions if the user is not found or the password is wrong. Sets `_isLoading` to true during the network request.
+
+### `registerWithEmail(String email, String password, String name)`
+1.  Creates the user in Firebase Auth.
+2.  Updates the Auth `displayName`.
+3.  Creates a new document in the `users` Firestore collection.
+
+### `signInWithGoogle()`
+Invokes the `google_sign_in` plugin to obtain auth credentials, then authenticates with Firebase. If the user is new, it initializes their Firestore document.
+
+### `signOut()`
+Clears local state, signs out of Firebase, and signs out of Google SignIn if applicable.
+
+## UI Integration
+
+Widgets should consume this provider using `Consumer<AuthProvider>` or `context.watch<AuthProvider>()`.
+
+```dart
+final auth = context.watch<AuthProvider>();
+
+if (auth.isLoading) {
+  return CircularProgressIndicator();
+}
+
+if (!auth.isAuthenticated) {
+  return LoginScreen();
+}
+```

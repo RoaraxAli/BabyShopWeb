@@ -249,9 +249,25 @@ export default function AdminPage() {
     await updateDoc(doc(db, "support_tickets", ticketId), { status: "Resolved" });
   }
 
-  const totalSales = orders.reduce((sum, o) => sum + (o.status === "Delivered" ? o.total : 0), 0);
-  const pendingOrders = orders.filter((o) => o.status !== "Delivered").length;
-  const openTickets = tickets.filter((t) => t.status !== "Resolved").length;
+  // Helper formatting variables with null checks to prevent crashes
+  const formatPrice = (val: any) => {
+    const clean = String(val || "").replace("$", "");
+    const parsed = parseFloat(clean);
+    return isNaN(parsed) ? "0.00" : parsed.toFixed(2);
+  };
+
+  const getStatusClass = (status?: string) => {
+    return (status || "pending").toLowerCase();
+  };
+
+  const totalSales = orders.reduce((sum, o) => {
+    const status = (o.status || "").toLowerCase();
+    const orderTotal = parseFloat(String(o.total || "0"));
+    return sum + (status === "delivered" ? (isNaN(orderTotal) ? 0 : orderTotal) : 0);
+  }, 0);
+
+  const pendingOrders = orders.filter((o) => (o.status || "").toLowerCase() !== "delivered").length;
+  const openTickets = tickets.filter((t) => (t.status || "").toLowerCase() !== "resolved").length;
 
   if (loading || !user || user.role !== "admin") return <main className="loading-page">Loading Admin Panel...</main>;
 
@@ -337,8 +353,8 @@ export default function AdminPage() {
                 {orders.slice(0, 5).map((o) => (
                   <div className="preview-row" key={o.id}>
                     <span>{o.email}</span>
-                    <strong className={`status-badge-inline ${o.status.toLowerCase()}`}>{o.status}</strong>
-                    <strong>${o.total.toFixed(2)}</strong>
+                    <strong className={`status-badge-inline ${getStatusClass(o.status)}`}>{o.status || "Pending"}</strong>
+                    <strong>${formatPrice(o.total)}</strong>
                   </div>
                 ))}
               </div>
@@ -347,7 +363,7 @@ export default function AdminPage() {
                 {tickets.slice(0, 5).map((t) => (
                   <div className="preview-row" key={t.id}>
                     <span>{t.subject} ({t.name})</span>
-                    <strong className={`status-badge-inline ${t.status.toLowerCase()}`}>{t.status}</strong>
+                    <strong className={`status-badge-inline ${getStatusClass(t.status)}`}>{t.status || "Open"}</strong>
                   </div>
                 ))}
               </div>
@@ -384,7 +400,7 @@ export default function AdminPage() {
                         <img src={prod.image} alt="" />
                         <div>
                           <strong>{prod.name}</strong>
-                          <span className="desc-short">{prod.description.slice(0, 40)}...</span>
+                          <span className="desc-short">{prod.description ? prod.description.slice(0, 40) : ""}...</span>
                         </div>
                       </div>
                     </td>
@@ -431,9 +447,9 @@ export default function AdminPage() {
                         ))}
                       </div>
                     </td>
-                    <td><strong>${o.total.toFixed(2)}</strong></td>
+                    <td><strong>${formatPrice(o.total)}</strong></td>
                     <td><span className="address-span">{o.address}</span></td>
-                    <td><span className={`status-pill ${o.status.toLowerCase()}`}>{o.status}</span></td>
+                    <td><span className={`status-pill ${getStatusClass(o.status)}`}>{o.status}</span></td>
                     <td>
                       {o.status !== "Delivered" ? (
                         <button
@@ -497,13 +513,13 @@ export default function AdminPage() {
                 <div className="empty-state">No client support tickets found in Firestore.</div>
               ) : (
                 tickets.map((t) => (
-                  <div className={`ticket-box-item ${t.status.toLowerCase()}`} key={t.id}>
+                  <div className={`ticket-box-item ${getStatusClass(t.status)}`} key={t.id}>
                     <div className="ticket-header">
                       <div>
                         <h3>{t.subject}</h3>
                         <span>From: {t.name} ({t.email})</span>
                       </div>
-                      <span className={`status-pill ${t.status.toLowerCase()}`}>{t.status}</span>
+                      <span className={`status-pill ${getStatusClass(t.status)}`}>{t.status || "Open"}</span>
                     </div>
                     <p className="ticket-message-content"><strong>Inquiry:</strong> {t.message}</p>
                     
@@ -521,7 +537,7 @@ export default function AdminPage() {
                     )}
 
                     <div className="ticket-actions-row">
-                      {t.status !== "Resolved" ? (
+                      {(t.status || "").toLowerCase() !== "resolved" ? (
                         <>
                           {replyTicketId === t.id ? (
                             <form onSubmit={(e) => handleSendTicketReply(e, t.id)} className="ticket-reply-form">
@@ -657,4 +673,5 @@ export default function AdminPage() {
     </main>
   );
 }
+
 

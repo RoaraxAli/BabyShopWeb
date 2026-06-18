@@ -1,0 +1,45 @@
+---
+title: Admin Panel
+description: Administration tools, product management, and order tracking
+---
+
+# Admin Panel
+
+The Admin Panel is a restricted section of the application only accessible to users with the `role: "admin"` in their Firestore document.
+
+## Access Control
+
+In `HomeScreen` or the main drawer, the "Admin Dashboard" link is conditionally rendered:
+
+```dart
+final user = context.watch<AuthProvider>().userProfile;
+
+if (user?.role == 'admin') {
+  return ListTile(
+    title: Text('Admin Panel'),
+    onTap: () => Navigator.pushNamed(context, '/admin'),
+  );
+}
+```
+
+## Features
+
+### Product Management
+Located in `AdminProductsScreen`.
+-   **Create:** A form to add new products. Uploads images to Cloudinary, then saves the URLs alongside product metadata to the `products` collection.
+-   **Update:** Edit price, stock, and descriptions.
+-   **Delete:** Soft-delete or permanently remove a product from the database.
+
+### Order Tracking
+Located in `AdminOrdersScreen`.
+-   View all global orders.
+-   Filter by status (`"pending"`, `"shipped"`, `"delivered"`).
+-   Update the status of an order (which automatically triggers an email notification to the user via the Email Relay).
+
+### User Management
+Located in `AdminUsersScreen`.
+-   View registered users.
+-   Promote users to admin status (requires existing admin privileges).
+
+## Security
+UI hiding is not enough. The [Firestore Security Rules](/docs/developer-guide/security-rules) enforce that only authenticated users with an `"admin"` role can write to the `products` collection or read the global `orders` collection.

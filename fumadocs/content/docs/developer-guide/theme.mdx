@@ -1,0 +1,64 @@
+---
+title: Theme System
+description: Light/Dark mode, color palettes, and persistence
+---
+
+# Theme System
+
+BabyShopHub supports dynamic theming, including Light Mode, Dark Mode, and custom accent colors. This is managed entirely by the `ThemeProvider`.
+
+## ThemeProvider Architecture
+
+The `ThemeProvider` extends `ChangeNotifier` and persists user preferences using the `shared_preferences` package.
+
+```dart
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.system;
+  Color _accentColor = Colors.blue;
+
+  ThemeMode get themeMode => _themeMode;
+  Color get accentColor => _accentColor;
+
+  ThemeProvider() {
+    _loadPreferences();
+  }
+
+  void toggleTheme(bool isDark) {
+    _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    _savePreferences();
+    notifyListeners();
+  }
+
+  void setAccentColor(Color color) {
+    _accentColor = color;
+    _savePreferences();
+    notifyListeners();
+  }
+}
+```
+
+## Material Theme Data
+
+In `main.dart`, we consume the `ThemeProvider` to build the `MaterialApp`'s `theme` and `darkTheme` properties.
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    colorSchemeSeed: themeProvider.accentColor,
+    brightness: Brightness.light,
+    useMaterial3: true,
+  ),
+  darkTheme: ThemeData(
+    colorSchemeSeed: themeProvider.accentColor,
+    brightness: Brightness.dark,
+    useMaterial3: true,
+  ),
+  themeMode: themeProvider.themeMode,
+)
+```
+
+## Persistence
+
+By utilizing `shared_preferences`, the theme state survives app restarts.
+-   Key `'isDarkMode'`: Boolean.
+-   Key `'accentColor'`: Integer representing the ARGB value of the color.

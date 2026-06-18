@@ -1,0 +1,20 @@
+{
+  "title": "User Guide",
+  "pages": [
+    "index",
+    "registration",
+    "login",
+    "browsing",
+    "product-details",
+    "cart",
+    "checkout",
+    "orders",
+    "wishlist",
+    "profile",
+    "addresses",
+    "security",
+    "notifications",
+    "ai-assistant",
+    "faq"
+  ]
+}

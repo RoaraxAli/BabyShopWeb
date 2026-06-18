@@ -8,6 +8,18 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/documentation",
+        destination: "http://localhost:3001/documentation",
+      },
+      {
+        source: "/documentation/:path*",
+        destination: "http://localhost:3001/documentation/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

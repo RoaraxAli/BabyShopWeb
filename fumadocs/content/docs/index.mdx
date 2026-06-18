@@ -1,0 +1,59 @@
+---
+title: BabyShopHub Documentation
+description: Complete reference for the BabyShopHub Flutter app — covering everything from shopping to system architecture.
+---
+
+# Welcome to BabyShopHub Docs 👶
+
+BabyShopHub is a **full-featured, cross-platform baby products shopping app** built with Flutter. It connects parents with premium baby essentials — clothing, diapers, food, toys, and bath products — through a delightful, secure, and intuitive experience.
+
+---
+
+## What's in these docs?
+
+<Cards>
+  <Card title="🛍️ User Guide" href="/docs/user-guide">
+    Learn how to create an account, browse products, manage your cart, track orders, and secure your account with two-factor authentication.
+  </Card>
+  <Card title="🛠️ Developer Guide" href="/docs/developer-guide">
+    Understand the architecture, Firestore schemas, service providers, admin panel, email relay system, and deployment pipeline.
+  </Card>
+</Cards>
+
+---
+
+## Key Features at a Glance
+
+| Feature | Description |
+|---|---|
+| **Auth** | Email/password + Google SSO + TOTP 2FA |
+| **Shopping** | Search, filter by category, product details with image gallery |
+| **Cart** | Promo codes, stock-aware quantities, live subtotal |
+| **Checkout** | Saved addresses, order confirmation email |
+| **Orders** | Full history + real-time status tracking (7 stages) |
+| **Wishlist** | Save items + automated back-in-stock email alerts |
+| **AI Chat** | Groq-powered LLM assistant (Llama 3.3 70B) with offline fallback |
+| **Admin Panel** | Full product CRUD, order management, user notifications |
+| **Profile** | Custom avatar, Cloudinary photo upload, display name edit |
+| **Theme** | Light/dark mode + custom color presets, persisted via SharedPreferences |
+
+---
+
+## Technology Stack
+
+```
+Flutter (Dart 3)      — Cross-platform mobile/web/desktop client
+Firebase Auth         — Secure authentication (email, Google)
+Cloud Firestore       — Real-time NoSQL database
+Provider              — State management (ChangeNotifier)
+Groq API              — LLM AI chat (Llama 3.3-70B / Llama 3.1-8B)
+Cloudinary            — Cloud image upload & hosting
+Node.js + Nodemailer  — SMTP email relay server (Zoho)
+Fumadocs + Next.js    — This documentation site
+```
+
+---
+
+## Version
+
+Current version: **v0.1.0** (Flutter SDK ^3.11.5, Dart ^3.0)

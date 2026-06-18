@@ -1,0 +1,69 @@
+---
+title: Email Relay Server
+description: Node.js SMTP server for transactional emails
+---
+
+# Email Relay Server
+
+Because Flutter cannot securely send SMTP emails directly from the client without exposing credentials, BabyShopHub uses a lightweight Node.js Express server to handle transactional emails (e.g., order confirmations, shipping updates).
+
+## Architecture
+
+Located in the `server/` directory of the repository.
+-   **Framework:** Express.js
+-   **Mailer:** Nodemailer
+-   **Provider:** Zoho Mail (or any standard SMTP provider)
+
+## Setup & Running
+
+1.  Navigate to the `server/` directory.
+2.  Install dependencies: `npm install`
+3.  Create a `.env` file:
+    ```env
+    PORT=3000
+    SMTP_HOST=smtp.zoho.com
+    SMTP_PORT=465
+    SMTP_USER=your-email@babyshophub.com
+    SMTP_PASS=your-secure-password
+    ```
+4.  Run the server: `node index.js`
+
+## API Endpoints
+
+### `POST /send-order-confirmation`
+
+**Payload:**
+```json
+{
+  "email": "customer@example.com",
+  "orderId": "ORD-12345",
+  "total": 120.50,
+  "items": [...]
+}
+```
+
+**Response:**
+Returns `200 OK` on success, `500 Internal Server Error` on failure.
+
+## Client Integration
+
+The Flutter app communicates with this relay server using the `http` package.
+
+```dart
+Future<void> sendConfirmationEmail(OrderModel order, String userEmail) async {
+  final url = Uri.parse('https://your-relay-server.com/send-order-confirmation');
+  
+  await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'email': userEmail,
+      'orderId': order.id,
+      'total': order.totalAmount,
+    }),
+  );
+}
+```
+
+## Deployment
+This server is typically deployed as a serverless function on Vercel or a small container on Render/Heroku. Ensure CORS is configured to only accept requests from your app's domain.

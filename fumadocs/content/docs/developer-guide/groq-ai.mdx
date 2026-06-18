@@ -1,0 +1,67 @@
+---
+title: Groq AI Integration
+description: Intelligent chat assistant configuration and fallback logic
+---
+
+# Groq AI Integration
+
+BabyShopHub features an in-app AI assistant powered by Groq's high-speed inference API. It helps users find products, answers parenting FAQs, and guides them through the shop.
+
+## Configuration
+
+The AI logic is encapsulated in the `GroqService`.
+
+1.  **API Key:** Obtain an API key from the Groq console.
+2.  **Environment Variable:** Store the key securely. Never hardcode it into public repositories.
+
+## Implementation Details
+
+We use the standard HTTP REST approach to communicate with the Groq API, typically utilizing the `llama3-8b-8192` or `mixtral-8x7b-32768` models.
+
+```dart
+class GroqService {
+  final String _apiKey = 'YOUR_GROQ_API_KEY';
+  final String _endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+
+  Future<String> sendMessage(String userMessage) async {
+    final response = await http.post(
+      Uri.parse(_endpoint),
+      headers: {
+        'Authorization': 'Bearer $_apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'model': 'llama3-8b-8192',
+        'messages': [
+          {
+            'role': 'system',
+            'content': 'You are a helpful assistant for BabyShopHub. You help parents find baby products and give general parenting advice.'
+          },
+          {
+            'role': 'user',
+            'content': userMessage
+          }
+        ]
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['choices'][0]['message']['content'];
+    } else {
+      throw Exception('Failed to fetch AI response');
+    }
+  }
+}
+```
+
+## Context Injection
+
+To make the AI aware of the store's current inventory, we can inject a summary of the `ShopProvider`'s product list into the `system` prompt before sending the request.
+
+## Error Handling & Fallbacks
+
+If the Groq API is down or rate-limited:
+1.  The `GroqService` catches the exception.
+2.  It returns a hardcoded fallback message: `"I'm currently taking a little nap. Please try asking me again later!"`
+3.  This ensures the user experience isn't broken by a third-party outage.
