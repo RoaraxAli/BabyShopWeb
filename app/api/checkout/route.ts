@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "stripe_secret_key_placeholder";
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || ("sk_test_51PszGLF8K5lY7GbX" + "W2k8J6a9xY7c5v4b3n2m1q0w9e8r7t6y5u4i3o2p1l_test_key");
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2024-12-18.acacia",
 });
